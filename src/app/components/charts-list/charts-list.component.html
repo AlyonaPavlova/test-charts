@@ -1,0 +1,3 @@
+<ng-container *ngFor="let chartOptions of options">
+  <app-output-chart [chartOptions]="chartOptions" (newChartEvent)="addChart($event)"></app-output-chart>
+</ng-container>
