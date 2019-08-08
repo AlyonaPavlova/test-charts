@@ -1,32 +1,94 @@
 <ng-container *ngFor="let chartOptions of options">
-  <button (click)="removeChart(chartOptions)" type="button" class="close mr-2 mt-1" aria-label="Close">
+  <button
+    (click)="removeChart(chartOptions)"
+    type="button"
+    class="close pr-2 mt-1"
+    aria-label="Close"
+  >
     <span aria-hidden="true">&times;</span>
   </button>
 
   <app-output-chart
     [chartOptions]="chartOptions"
-    (newChartEvent)="addChart($event)"
+    (newChartEvent)="changeChartsList($event)"
   ></app-output-chart>
 
-  <div class="mt-3 mb-5">
+  <div class="mt-3 mb-5 row">
+    <div class="col-6 text-left pl-5">
+      <div class="btn-group mr-1 mb-2">
+        <label class="my-1 mr-2 sensor-title" for="tmpSensors"
+          >Temperature Sensors</label
+        >
+        <ng-select
+          id="tmpSensors"
+          [items]="['sensor1', 'sensor2', 'sensor3', 'sensor4']"
+          [multiple]="true"
+          [(ngModel)]="selectedTmpSensorsArr"
+          (ngModelChange)="onSelectSensors(chartOptions)"
+          placeholder="Nothing selected..."
+        ></ng-select>
+      </div>
 
+      <div class="btn-group mr-1 mb-2">
+        <label class="my-1 mr-2 sensor-title" for="humiditySensors"
+          >Humidity Sensors</label
+        >
+        <ng-select
+          id="humiditySensors"
+          [items]="['sensor1', 'sensor2', 'sensor3', 'sensor4']"
+          [multiple]="true"
+          [(ngModel)]="selectedTmpSensorsArr"
+          (ngModelChange)="onSelectSensors(chartOptions)"
+          placeholder="Nothing selected..."
+        ></ng-select>
+      </div>
+
+      <div class="btn-group mr-1 mb-2">
+        <label class="my-1 mr-2 sensor-title" for="lightsSensors"
+          >Light Sensors</label
+        >
+        <ng-select
+          id="lightsSensors"
+          [items]="['sensor1', 'sensor2', 'sensor3', 'sensor4']"
+          [multiple]="true"
+          [(ngModel)]="selectedTmpSensorsArr"
+          (ngModelChange)="onSelectSensors(chartOptions)"
+          placeholder="Nothing selected..."
+        ></ng-select>
+      </div>
+    </div>
+
+    <div class="col-6">
       <div class="btn-group mr-1">
-        <label class="my-1 mr-2" for="inlineFormCustomSelectPref1">Chart type</label>
-        <select [(ngModel)]="chartType" (ngModelChange)="onChangeDataChart(chartOptions)" class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref1">
+        <label class="my-1 pr-4" for="inlineFormCustomSelectPref1"
+          >Chart type</label
+        >
+        <select
+          [(ngModel)]="chartType"
+          (ngModelChange)="onChangeDataChart(chartOptions)"
+          class="custom-select my-1 mr-sm-2"
+          id="inlineFormCustomSelectPref1"
+        >
           <option value="line">Line</option>
           <option value="bar">Bar</option>
         </select>
       </div>
 
       <div class="btn-group mr-1">
-        <label class="my-1 mr-2" for="inlineFormCustomSelectPref2">Line color</label>
-        <select [(ngModel)]="lineColor" (ngModelChange)="onChangeDataChart(chartOptions)" class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref2">
+        <label class="my-1 pr-4" for="inlineFormCustomSelectPref2"
+          >Line color</label
+        >
+        <select
+          [(ngModel)]="lineColor"
+          (ngModelChange)="onChangeDataChart(chartOptions)"
+          class="custom-select my-1 mr-sm-2"
+          id="inlineFormCustomSelectPref2"
+        >
           <option value="#7cb5ec">Blue</option>
           <option value="#19A617">Green</option>
           <option value="#AD1106">Red</option>
         </select>
       </div>
-
+    </div>
   </div>
-
 </ng-container>

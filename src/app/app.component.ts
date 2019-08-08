@@ -12,7 +12,7 @@ export class AppComponent {
   chartsListComponent: ChartsListComponent;
 
   addChart() {
-    this.chartsListComponent.addNewChartOptions();
+    this.chartsListComponent.addChart();
   }
 
   removeChart() {}

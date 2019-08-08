@@ -1,4 +1,4 @@
-export const data = [
+export const defaultChartData = [
   [1293580800000, 46.47],
   [1293667200000, 46.24],
   [1293753600000, 46.08],

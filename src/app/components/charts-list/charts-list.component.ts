@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Options } from 'highcharts/highstock';
-
-import { data } from '../../data';
-import { getDefaultChartOptions } from '../../../environments/environment';
+import {
+  getDefaultChartOptions,
+  getNewChartOptions,
+  defaultChartType,
+  defaultLineColor,
+} from '../../../environments/environment';
 import { ClickHandlerService } from '../../services';
+import { getSensorsNumber, setSensorsData } from '../../../utils';
 
 @Component({
   selector: 'app-charts-list',
@@ -12,83 +15,41 @@ import { ClickHandlerService } from '../../services';
   styleUrls: ['./charts-list.component.css'],
 })
 export class ChartsListComponent implements OnInit {
-  chartType = 'line';
-  lineColor = '#7cb5ec';
+  chartType = defaultChartType;
+  lineColor = defaultLineColor;
+
+  tmpSensorsData = [];
+  humiditySensorsData = [];
+  lightSensorsData = [];
+
+  selectedTmpSensorsArr: any;
+
   charts = [];
 
-  first: Options = {
-    xAxis: {
-      events: {
-        afterSetExtremes: e => {
-          this.charts.forEach((chart, i) => {
-            if (chart && i !== 0) {
-              chart.ref.xAxis[0].setExtremes(e.min, e.max);
-            }
-          });
-        },
-      },
-    },
-    title: {
-      text: 'Chart №1',
-    },
-    series: [
-      {
-        type: 'line',
-        tooltip: {
-          valueDecimals: 2,
-        },
-        name: 'AAPL',
-        data,
-      },
-    ],
-  };
-
-  second = {
-    rangeSelector: {
-      enabled: false,
-    },
-    title: {
-      text: 'Chart №2',
-    },
-    series: [
-      {
-        type: 'line',
-        tooltip: {
-          valueDecimals: 2,
-        },
-        name: 'AAPL',
-        data,
-      },
-    ],
-  };
-
-  third = {
-    rangeSelector: {
-      enabled: false,
-    },
-    title: {
-      text: 'Chart №3',
-    },
-    series: [
-      {
-        type: 'bar',
-        tooltip: {
-          valueDecimals: 2,
-        },
-        name: 'AAPL',
-        data,
-      },
-    ],
-  };
-
-  options = [this.first, this.second, this.third];
+  defaultChartOptions = getDefaultChartOptions(this.charts);
+  options = [this.defaultChartOptions];
 
   constructor(private clickHandlerService: ClickHandlerService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    setSensorsData(this.tmpSensorsData, getSensorsNumber());
+    setSensorsData(this.humiditySensorsData, getSensorsNumber());
+    setSensorsData(this.lightSensorsData, getSensorsNumber());
+  }
 
-  addChart(chart) {
+  changeChartsList(chart) {
     this.charts = [...this.charts, chart];
+  }
+
+  // Adding chart options for display new chart
+  addChart() {
+    const newChartOptions = this.options.length
+      ? getNewChartOptions(this.options.length + 1)
+      : getDefaultChartOptions(this.charts);
+
+    this.options = [...this.options, newChartOptions];
+
+    this.clickHandlerService.emitClickEvent('add', this.options.length);
   }
 
   removeChart(chartOptions) {
@@ -102,58 +63,22 @@ export class ChartsListComponent implements OnInit {
     this.clickHandlerService.emitClickEvent('remove', this.options.length);
   }
 
-  addNewChartOptions() {
-    const defaultChartOptions = getDefaultChartOptions(
-      this.options.length + 1,
-      data,
-    );
-
-    // To display one time interval for all charts
-    const newChartOptions = this.options.length
-      ? {
-          ...defaultChartOptions,
-          rangeSelector: {
-            enabled: false,
-          },
-        }
-      : {
-          ...defaultChartOptions,
-          xAxis: {
-            events: {
-              afterSetExtremes: e => {
-                this.charts.forEach((chart, i) => {
-                  if (chart && i !== 0) {
-                    chart.ref.xAxis[0].setExtremes(e.min, e.max);
-                  }
-                });
-              },
-            },
-          },
-        };
-
-    // @ts-ignore
-    this.options = [...this.options, newChartOptions];
-
-    this.clickHandlerService.emitClickEvent('add', this.options.length);
-  }
-
   onChangeDataChart(chartOptions) {
     this.charts.forEach(chart => {
       if (chart.options.title.text === chartOptions.title.text) {
         chart.ref.update({
-          series: [
-            {
-              type: this.chartType,
-              tooltip: {
-                valueDecimals: 2,
-              },
-              name: 'AAPL',
-              data,
-              color: this.lineColor,
-            },
-          ],
+          chart: {
+            type: this.chartType,
+          },
+          series: chart.options.series.map(item => {
+            return { ...item, color: this.lineColor };
+          }),
         });
       }
     });
+  }
+
+  onSelectSensors(chartOptions) {
+    console.log(this.selectedTmpSensorsArr);
   }
 }
