@@ -1,3 +1,10 @@
 <ng-container *ngFor="let chartOptions of options">
-  <app-output-chart [chartOptions]="chartOptions" (newChartEvent)="addChart($event)"></app-output-chart>
+  <button (click)="removeChart(chartOptions)" type="button" class="close mr-2 mt-1" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+
+  <app-output-chart
+    [chartOptions]="chartOptions"
+    (newChartEvent)="addChart($event)"
+  ></app-output-chart>
 </ng-container>

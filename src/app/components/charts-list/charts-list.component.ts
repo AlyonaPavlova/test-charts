@@ -4,6 +4,7 @@ import { Options } from 'highcharts/highstock';
 
 import { data } from '../../data';
 import { getDefaultChartOptions } from '../../../environments/environment';
+import { ClickHandlerService } from '../../services';
 
 @Component({
   selector: 'app-charts-list',
@@ -80,12 +81,23 @@ export class ChartsListComponent implements OnInit {
 
   options = [this.first, this.second, this.third];
 
-  constructor() {}
+  constructor(private clickHandlerService: ClickHandlerService) {}
 
   ngOnInit() {}
 
   addChart(chart) {
     this.charts = [...this.charts, chart];
+  }
+
+  removeChart(chartOptions) {
+    this.options = this.options.filter(
+      ({ title }) => title.text !== chartOptions.title.text,
+    );
+    this.charts = this.charts.filter(
+      ({ options }) => options.title.text !== chartOptions.title.text,
+    );
+
+    this.clickHandlerService.emitClickEvent('remove', this.options.length);
   }
 
   addNewChartOptions() {
@@ -120,6 +132,6 @@ export class ChartsListComponent implements OnInit {
     // @ts-ignore
     this.options = [...this.options, newChartOptions];
 
-    localStorage.setItem('chartsNumber', String(this.options.length));
+    this.clickHandlerService.emitClickEvent('add', this.options.length);
   }
 }

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 import { maxChartsNumber } from '../../../environments/environment';
+import {ClickHandlerService} from '../../services';
 
 @Component({
   selector: 'app-nav',
@@ -13,13 +14,17 @@ export class NavComponent implements OnInit {
   chartsNumber: number;
   maxChartsNumber = maxChartsNumber;
 
-  constructor() {}
+  constructor(private clickHandlerService: ClickHandlerService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.clickHandlerService.actions.subscribe(res => {
+      if (res) {
+        this.chartsNumber = res.payload;
+      }
+    });
+  }
 
   onClickAddChart() {
     this.addChartClickEvent.emit();
-
-    this.chartsNumber = Number(localStorage.getItem('chartsNumber'));
   }
 }
