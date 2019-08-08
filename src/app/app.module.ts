@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChartModule, HIGHCHARTS_MODULES } from 'angular-highcharts';
@@ -23,6 +24,7 @@ import { ChartsListComponent } from './components/charts-list/charts-list.compon
     AppRoutingModule,
     NgbModule,
     ChartModule,
+    FormsModule,
   ],
   providers: [
     { provide: HIGHCHARTS_MODULES, useFactory: () => [ highstock ] }

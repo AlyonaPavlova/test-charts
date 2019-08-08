@@ -12,6 +12,8 @@ import { ClickHandlerService } from '../../services';
   styleUrls: ['./charts-list.component.css'],
 })
 export class ChartsListComponent implements OnInit {
+  chartType = 'line';
+  lineColor = '#7cb5ec';
   charts = [];
 
   first: Options = {
@@ -133,5 +135,25 @@ export class ChartsListComponent implements OnInit {
     this.options = [...this.options, newChartOptions];
 
     this.clickHandlerService.emitClickEvent('add', this.options.length);
+  }
+
+  onChangeDataChart(chartOptions) {
+    this.charts.forEach(chart => {
+      if (chart.options.title.text === chartOptions.title.text) {
+        chart.ref.update({
+          series: [
+            {
+              type: this.chartType,
+              tooltip: {
+                valueDecimals: 2,
+              },
+              name: 'AAPL',
+              data,
+              color: this.lineColor,
+            },
+          ],
+        });
+      }
+    });
   }
 }
