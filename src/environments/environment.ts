@@ -3,8 +3,26 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
 };
+
+export function getDefaultChartOptions(chartNumber, data) {
+  return {
+    title: {
+      text: `Chart №${chartNumber}`,
+    },
+    series: [
+      {
+        type: 'line',
+        tooltip: {
+          valueDecimals: 2,
+        },
+        name: 'AAPL',
+        data,
+      },
+    ],
+  };
+}
 
 /*
  * For easier debugging in development mode, you can import the following file
