@@ -70,14 +70,20 @@ export const sensors = [
   {
     name: 'Temperature Sensors',
     type: 'temperature',
+    sensors: [],
+    selectedSensors: [],
   },
   {
     name: 'Humidity Sensors',
     type: 'humidity',
+    sensors: [],
+    selectedSensors: [],
   },
   {
     name: 'Light Sensors',
     type: 'light',
+    sensors: [],
+    selectedSensors: [],
   },
 ];
 

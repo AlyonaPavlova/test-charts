@@ -5,9 +5,10 @@ import {
   getNewChartOptions,
   defaultChartType,
   defaultLineColor,
+  sensors,
 } from '../../../environments/environment';
 import { ClickHandlerService } from '../../services';
-import { getSensorsNumber, setSensorsData } from '../../../utils';
+import { getSensorsData } from '../../../utils';
 
 @Component({
   selector: 'app-charts-list',
@@ -15,14 +16,9 @@ import { getSensorsNumber, setSensorsData } from '../../../utils';
   styleUrls: ['./charts-list.component.css'],
 })
 export class ChartsListComponent implements OnInit {
+  sensorsByTypeList = sensors;
   chartType = defaultChartType;
   lineColor = defaultLineColor;
-
-  tmpSensorsData = [];
-  humiditySensorsData = [];
-  lightSensorsData = [];
-
-  selectedTmpSensorsArr: any;
 
   charts = [];
 
@@ -32,9 +28,11 @@ export class ChartsListComponent implements OnInit {
   constructor(private clickHandlerService: ClickHandlerService) {}
 
   ngOnInit() {
-    setSensorsData(this.tmpSensorsData, getSensorsNumber());
-    setSensorsData(this.humiditySensorsData, getSensorsNumber());
-    setSensorsData(this.lightSensorsData, getSensorsNumber());
+    this.sensorsByTypeList = this.sensorsByTypeList.map(sensorsTypeObj => {
+      return { ...sensorsTypeObj, sensors: getSensorsData() };
+    });
+
+    console.log('<<<<<<< Generated data: ', this.sensorsByTypeList);
   }
 
   changeChartsList(chart) {
@@ -78,7 +76,7 @@ export class ChartsListComponent implements OnInit {
     });
   }
 
-  onSelectSensors(chartOptions) {
-    console.log(this.selectedTmpSensorsArr);
+  onSelectSensors(chartOptions, selectedSensors) {
+    console.log(selectedSensors);
   }
 }
