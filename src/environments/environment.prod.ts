@@ -19,3 +19,5 @@ export function getDefaultChartOptions(chartNumber, data) {
     ],
   };
 }
+
+export const maxChartsNumber = 4;

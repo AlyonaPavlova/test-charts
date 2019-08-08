@@ -119,5 +119,7 @@ export class ChartsListComponent implements OnInit {
 
     // @ts-ignore
     this.options = [...this.options, newChartOptions];
+
+    localStorage.setItem('chartsNumber', String(this.options.length));
   }
 }
