@@ -1,5 +1,4 @@
 <ng-container *ngFor="let chartOptions of options">
-
   <button
     (click)="removeChart(chartOptions)"
     type="button"
@@ -13,5 +12,4 @@
     [chartOptions]="chartOptions"
     (newChartEvent)="changeChartsList($event)"
   ></app-output-chart>
-
 </ng-container>

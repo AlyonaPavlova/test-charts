@@ -3,5 +3,9 @@
 }
 
 .ng-select.sensors-select {
-  max-width: 238px;
+  width: 280px;
+}
+
+.custom-chart {
+  width: 100%;
 }

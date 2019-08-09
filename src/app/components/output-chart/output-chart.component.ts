@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 
 import { StockChart } from 'angular-highcharts';
+import * as R from 'ramda';
 
 import {
   defaultChartType,
@@ -46,43 +47,32 @@ export class OutputChartComponent implements OnInit {
     });
   }
 
-  onSensorSelected(selectedSensors) {
-    if (selectedSensors.length) {
-      this.stockChart.ref$.subscribe(res => {
-        let newSeries;
+  onSensorSelected(chart) {
+    this.stockChart.ref$.subscribe(res => {
+      const isExistChart = R.includes(
+        chart.name,
+        res.series.map(({ name }) => name),
+      );
 
-        if (res.options.series.length) {
-          let filteredSensors = [];
+      if (!isExistChart) {
+        const newChart = { ...chart, type: this.chartType };
 
-          res.options.series.forEach(({ name }) => {
-            selectedSensors.forEach(sensor => {
-              if (sensor.name !== name) {
-                filteredSensors.push({ ...sensor, type: this.chartType });
-              }
-            });
-          });
+        res.addSeries(newChart, true);
+      }
+    });
+  }
 
-          const filteredSensorsWithType = filteredSensors.map(sensor => {
-            return {
-              ...sensor,
-              type: this.chartType,
-            };
-          });
+  onSensorRemoved(chart) {
+    this.stockChart.ref$.subscribe(({ series }) => {
+      series.find(({ name }) => chart.label === name).remove(true);
+    });
+  }
 
-          newSeries = [...res.options.series, ...filteredSensorsWithType];
-        } else {
-          newSeries = selectedSensors.map(sensor => {
-            return {
-              ...sensor,
-              type: this.chartType,
-            };
-          });
-        }
-
-        newSeries.forEach(serie => {
-          res.addSeries(serie, true);
-        });
-      });
-    }
+  onAllSensorsRemoved() {
+    this.stockChart.ref$.subscribe(({ series }) => {
+      while (series.length > 0) {
+        series[0].remove(true);
+      }
+    });
   }
 }

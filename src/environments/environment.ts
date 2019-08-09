@@ -4,8 +4,6 @@
 
 import { Options } from 'highcharts/highstock';
 
-import { defaultChartData } from '../configs/defaultChartData';
-
 export const environment = {
   production: false,
 };
@@ -24,6 +22,10 @@ export function getDefaultChartOptions(chartsList) {
         },
       },
     },
+    chart: {
+      spacingLeft: 20,
+      spacingRight: 20,
+    },
     title: {
       text: 'Chart №1',
     },
@@ -39,18 +41,14 @@ export function getNewChartOptions(chartNumber) {
     rangeSelector: {
       enabled: false,
     },
+    chart: {
+      spacingLeft: 20,
+      spacingRight: 20,
+    },
     title: {
       text: `Chart №${chartNumber}`,
     },
-    series: [
-      {
-        type: 'line',
-        tooltip: {
-          valueDecimals: 2,
-        },
-        data: defaultChartData,
-      },
-    ],
+    series: [],
   };
 
   return chartOptions;
