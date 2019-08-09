@@ -27,16 +27,7 @@ export function getDefaultChartOptions(chartsList) {
     title: {
       text: 'Chart №1',
     },
-    series: [
-      {
-        type: 'line',
-        tooltip: {
-          valueDecimals: 2,
-        },
-        name: 'AAPL',
-        data: defaultChartData,
-      },
-    ],
+    series: [],
   };
 
   return chartOptions;
@@ -57,7 +48,6 @@ export function getNewChartOptions(chartNumber) {
         tooltip: {
           valueDecimals: 2,
         },
-        name: 'AAPL',
         data: defaultChartData,
       },
     ],
@@ -70,18 +60,21 @@ export const sensors = [
   {
     name: 'Temperature Sensors',
     type: 'temperature',
+    units: '°C',
     sensors: [],
     selectedSensors: [],
   },
   {
     name: 'Humidity Sensors',
     type: 'humidity',
+    units: '%',
     sensors: [],
     selectedSensors: [],
   },
   {
     name: 'Light Sensors',
     type: 'light',
+    units: 'lm',
     sensors: [],
     selectedSensors: [],
   },

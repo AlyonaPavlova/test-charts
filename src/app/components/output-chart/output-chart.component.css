@@ -1,0 +1,7 @@
+.sensor-title {
+  min-width: 160px;
+}
+
+.ng-select.sensors-select {
+  max-width: 238px;
+}

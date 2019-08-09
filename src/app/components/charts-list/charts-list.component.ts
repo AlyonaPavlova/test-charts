@@ -3,12 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import {
   getDefaultChartOptions,
   getNewChartOptions,
-  defaultChartType,
-  defaultLineColor,
-  sensors,
 } from '../../../environments/environment';
 import { ClickHandlerService } from '../../services';
-import { getSensorsData } from '../../../utils';
 
 @Component({
   selector: 'app-charts-list',
@@ -16,10 +12,6 @@ import { getSensorsData } from '../../../utils';
   styleUrls: ['./charts-list.component.css'],
 })
 export class ChartsListComponent implements OnInit {
-  sensorsByTypeList = sensors;
-  chartType = defaultChartType;
-  lineColor = defaultLineColor;
-
   charts = [];
 
   defaultChartOptions = getDefaultChartOptions(this.charts);
@@ -27,13 +19,7 @@ export class ChartsListComponent implements OnInit {
 
   constructor(private clickHandlerService: ClickHandlerService) {}
 
-  ngOnInit() {
-    this.sensorsByTypeList = this.sensorsByTypeList.map(sensorsTypeObj => {
-      return { ...sensorsTypeObj, sensors: getSensorsData() };
-    });
-
-    console.log('<<<<<<< Generated data: ', this.sensorsByTypeList);
-  }
+  ngOnInit() {}
 
   changeChartsList(chart) {
     this.charts = [...this.charts, chart];
@@ -59,24 +45,5 @@ export class ChartsListComponent implements OnInit {
     );
 
     this.clickHandlerService.emitClickEvent('remove', this.options.length);
-  }
-
-  onChangeDataChart(chartOptions) {
-    this.charts.forEach(chart => {
-      if (chart.options.title.text === chartOptions.title.text) {
-        chart.ref.update({
-          chart: {
-            type: this.chartType,
-          },
-          series: chart.options.series.map(item => {
-            return { ...item, color: this.lineColor };
-          }),
-        });
-      }
-    });
-  }
-
-  onSelectSensors(chartOptions, selectedSensors) {
-    console.log(selectedSensors);
   }
 }
