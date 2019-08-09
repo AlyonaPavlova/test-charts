@@ -8,8 +8,8 @@ export const environment = {
   production: false,
 };
 
-// For first chart to display date picker
-export function getDefaultChartOptions(chartsList) {
+// For first chart with displaying date picker
+export function getFirstDefaultChartOptions(chartsList) {
   const chartOptions: Options = {
     xAxis: {
       events: {
@@ -35,8 +35,8 @@ export function getDefaultChartOptions(chartsList) {
   return chartOptions;
 }
 
-// For subsequent charts added manually
-export function getNewChartOptions(chartNumber) {
+// For subsequent charts with hiding the date picker
+export function getDefaultChartOptions(chartNumber) {
   const chartOptions: Options = {
     rangeSelector: {
       enabled: false,

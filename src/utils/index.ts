@@ -29,14 +29,14 @@ export const getSensorsNumber = () => {
   return getRandomArbitrary(minSensorsNumber, maxSensorsNumber);
 };
 
-export const getSensorsData = () => {
+export const getSensorsData = (sensorType) => {
   const sensorsNumber = getSensorsNumber();
 
   let dataArr = [];
 
   for (let i = 0; i < sensorsNumber; i++) {
     dataArr.push({
-      name: `Sensor №${i + 1}`,
+      name: `${sensorType} sensor №${i + 1}`,
       data: getRandomData(),
     });
   }
