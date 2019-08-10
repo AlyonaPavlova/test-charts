@@ -89,28 +89,12 @@ export class OutputChartComponent implements OnInit, OnDestroy {
       .sensors.map(({ name }) => name);
 
     this.stockChart.ref$.pipe(untilDestroyed(this)).subscribe(({ series }) => {
-      const indexesArr = series
+      series
         .filter(
           ({ name }) =>
             sensorsByTypeNames.includes(name) || name === approximateChartName,
         )
-        .map((item, i) => i);
-
-      let count = 0;
-
-      for (const i of indexesArr) {
-        if (indexesArr.pop() === i) {
-          series[i].remove();
-        }
-
-        if (count === 0) {
-          series[i].remove();
-        } else {
-          series[i - 1].remove();
-        }
-
-        count++;
-      }
+        .map(index => index.remove());
     });
   }
 
