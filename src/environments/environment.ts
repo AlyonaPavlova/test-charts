@@ -61,6 +61,9 @@ export const sensors = [
     units: '°C',
     sensors: [],
     selectedSensors: [],
+    isApproximate: false,
+    chartType: 'line',
+    lineColor: '#7cb5ec',
   },
   {
     name: 'Humidity Sensors',
@@ -68,6 +71,9 @@ export const sensors = [
     units: '%',
     sensors: [],
     selectedSensors: [],
+    isApproximate: false,
+    chartType: 'line',
+    lineColor: '#7cb5ec',
   },
   {
     name: 'Light Sensors',
@@ -75,6 +81,9 @@ export const sensors = [
     units: 'lm',
     sensors: [],
     selectedSensors: [],
+    isApproximate: false,
+    chartType: 'line',
+    lineColor: '#7cb5ec',
   },
 ];
 

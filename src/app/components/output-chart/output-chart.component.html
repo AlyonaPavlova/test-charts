@@ -17,23 +17,29 @@
         [multiple]="true"
         bindLabel="name"
         [(ngModel)]="sensorsType.selectedSensors"
-        (add)="onSensorSelected($event)"
+        (add)="onSensorSelected($event, sensorsType.chartType)"
         (remove)="onSensorRemoved($event)"
-        (clear)="onAllSensorsRemoved()"
+        (clear)="onAllSensorsRemovedByType(sensorsType.type)"
         placeholder="Nothing selected..."
       ></ng-select>
 
       <ng-container *ngIf="sensorsType.selectedSensors.length">
-        <button class="btn btn-sm btn-success ml-2 approximate-button">
+        <button
+          [disabled]="sensorsType.selectedSensors.length === 1"
+          [style.cursor]="
+            sensorsType.selectedSensors.length === 1 ? 'not-allowed' : 'pointer'
+          "
+          class="btn btn-sm btn-success ml-2 approximate-button"
+        >
           <div class="custom-control custom-switch">
             <input
-              [(ngModel)]="isApproximate"
-              (ngModelChange)="switchApproximate(sensorsType.type)"
+              [(ngModel)]="sensorsType.isApproximate"
+              (ngModelChange)="switchApproximate(sensorsType)"
               type="checkbox"
               class="custom-control-input"
-              id="customSwitch1"
+              id="custom-switch"
             />
-            <label class="custom-control-label" for="customSwitch1"
+            <label class="custom-control-label" for="custom-switch"
               >Approximate</label
             >
           </div>
@@ -43,8 +49,8 @@
           <div class="btn-group mr-1">
             <label class="my-1 pr-3" for="chart-type">Chart type</label>
             <select
-              [(ngModel)]="chartType"
-              (ngModelChange)="onChangeChartProperty(sensorsType.type)"
+              [(ngModel)]="sensorsType.chartType"
+              (ngModelChange)="onChangeChartProperty(sensorsType)"
               class="custom-select my-1 mr-sm-2"
               id="chart-type"
             >
@@ -54,14 +60,12 @@
           </div>
 
           <div class="btn-group mr-1">
-            <label class="my-1 pr-3" for="inlineFormCustomSelectPref2"
-              >Line color</label
-            >
+            <label class="my-1 pr-3" for="lines-color">Lines color</label>
             <select
-              [(ngModel)]="lineColor"
-              (ngModelChange)="onChangeChartProperty(sensorsType.type)"
+              [(ngModel)]="sensorsType.lineColor"
+              (ngModelChange)="onChangeChartProperty(sensorsType)"
               class="custom-select my-1 mr-sm-2"
-              id="inlineFormCustomSelectPref2"
+              id="lines-color"
             >
               <option value="#7cb5ec">Blue</option>
               <option value="#19A617">Green</option>
