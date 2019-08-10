@@ -8,9 +8,10 @@ export const getRandomArbitrary = (min, max) =>
 
 export const getRandomDate = (start, end) =>
   // in unix format
-  (start.getTime() + Math.random() * (end.getTime() - start.getTime())).toFixed(
-    0,
-  );
+  (
+    (start.getTime() + Math.random() * (end.getTime() - start.getTime())) /
+    1000
+  ).toFixed(0);
 
 export const getRandomData = () => {
   let dataArr = [];
@@ -29,7 +30,7 @@ export const getSensorsNumber = () => {
   return getRandomArbitrary(minSensorsNumber, maxSensorsNumber);
 };
 
-export const getSensorsData = (sensorType) => {
+export const getSensorsData = sensorType => {
   const sensorsNumber = getSensorsNumber();
 
   let dataArr = [];
@@ -42,4 +43,8 @@ export const getSensorsData = (sensorType) => {
   }
 
   return dataArr;
+};
+
+export const formatDateToTimestamp = date => {
+  return date.getTime() / 1000;
 };

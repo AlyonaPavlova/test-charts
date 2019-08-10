@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
-import {
-  getFirstDefaultChartOptions,
-  getDefaultChartOptions,
-} from '../../../environments/environment';
+import { getDefaultChartOptions } from '../../../environments/environment';
 import { ClickHandlerService } from '../../services';
+import { formatDateToTimestamp } from '../../../utils';
 
 @Component({
   selector: 'app-charts-list',
@@ -13,13 +11,26 @@ import { ClickHandlerService } from '../../services';
 })
 export class ChartsListComponent implements OnInit {
   charts = [];
+  options = [];
 
-  defaultChartOptions = getFirstDefaultChartOptions(this.charts);
-  options = [this.defaultChartOptions];
+  toDate: any;
+  fromDate: any;
+
+  maxTimestamp: number;
+  minTimestamp: number;
 
   constructor(private clickHandlerService: ClickHandlerService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.toDate = new Date();
+    this.fromDate = new Date(2010, 1, 1);
+
+    this.maxTimestamp = formatDateToTimestamp(this.toDate);
+    this.minTimestamp = formatDateToTimestamp(this.fromDate);
+
+    // Default empty chart
+    this.addChart();
+  }
 
   changeChartsList(chart) {
     this.charts = [...this.charts, chart];
@@ -27,13 +38,9 @@ export class ChartsListComponent implements OnInit {
 
   // Adding chart options for display new chart
   addChart() {
-    const newChartOptions = this.options.length
-      ? getDefaultChartOptions(this.options.length + 1)
-      : getFirstDefaultChartOptions(this.charts);
+    const newChartOptions = getDefaultChartOptions(this.options.length + 1);
 
     this.options = [...this.options, newChartOptions];
-
-    this.updateFirstChartProperty();
 
     this.clickHandlerService.emitClickEvent('add', this.options.length);
   }
@@ -46,25 +53,28 @@ export class ChartsListComponent implements OnInit {
       ({ options }) => options.title.text !== chartOptions.title.text,
     );
 
-    this.updateFirstChartProperty();
+    // if (chartOptions.title.text === 'Chart №1') {}
 
     this.clickHandlerService.emitClickEvent('remove', this.options.length);
   }
 
-  // For common date picker
-  updateFirstChartProperty() {
-    this.charts[0].ref.update({
-      xAxis: {
-        events: {
-          afterSetExtremes: (e: any) => {
-            this.charts.forEach((chart: any, i) => {
-              if (chart && i !== 0) {
-                chart.ref.xAxis[0].setExtremes(e.min, e.max);
-              }
-            });
-          },
-        },
-      },
+  onToDateChange(date) {
+    this.maxTimestamp = formatDateToTimestamp(new Date(date));
+
+    this.updateChartsXAxis();
+  }
+
+  onFromDateChange(date) {
+    this.minTimestamp = formatDateToTimestamp(new Date(date));
+
+    this.updateChartsXAxis();
+  }
+
+  updateChartsXAxis() {
+    this.charts.forEach(chart => {
+      if (chart) {
+        chart.ref.xAxis[0].setExtremes(this.minTimestamp, this.maxTimestamp);
+      }
     });
   }
 }

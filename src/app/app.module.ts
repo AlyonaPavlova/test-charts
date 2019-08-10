@@ -19,7 +19,7 @@ import { ChartsListComponent } from './components/charts-list/charts-list.compon
     AppComponent,
     OutputChartComponent,
     NavComponent,
-    ChartsListComponent
+    ChartsListComponent,
   ],
   imports: [
     BrowserModule,
@@ -30,9 +30,7 @@ import { ChartsListComponent } from './components/charts-list/charts-list.compon
     HttpClientModule,
     NgSelectModule,
   ],
-  providers: [
-    { provide: HIGHCHARTS_MODULES, useFactory: () => [ highstock ] }
-  ],
-  bootstrap: [AppComponent]
+  providers: [{ provide: HIGHCHARTS_MODULES, useFactory: () => [highstock] }],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

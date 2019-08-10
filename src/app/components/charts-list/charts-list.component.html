@@ -1,4 +1,28 @@
-<ng-container *ngFor="let chartOptions of options">
+<div class="btn-group mt-5 mb-5">
+  <label class="my-1 pr-3" for="date-from">From</label>
+  <input
+    [ngModel]="fromDate | date: 'yyyy-MM-dd'"
+    (ngModelChange)="onFromDateChange($event)"
+    min="{{ fromDate | date: 'yyyy-MM-dd' }}"
+    max="{{ toDate | date: 'yyyy-MM-dd' }}"
+    id="date-from"
+    class="form-control"
+    type="date"
+  />
+
+  <label class="my-1 pr-3 ml-3" for="date-to">To</label>
+  <input
+    [ngModel]="toDate | date: 'yyyy-MM-dd'"
+    (ngModelChange)="onToDateChange($event)"
+    min="{{ fromDate | date: 'yyyy-MM-dd' }}"
+    max="{{ toDate | date: 'yyyy-MM-dd' }}"
+    id="date-to"
+    class="form-control"
+    type="date"
+  />
+</div>
+
+<div *ngFor="let chartOptions of options">
   <button
     (click)="removeChart(chartOptions)"
     type="button"
@@ -12,4 +36,4 @@
     [chartOptions]="chartOptions"
     (newChartEvent)="changeChartsList($event)"
   ></app-output-chart>
-</ng-container>
+</div>

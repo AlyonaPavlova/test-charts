@@ -8,38 +8,10 @@ export const environment = {
   production: false,
 };
 
-// For first chart with displaying date picker
-export function getFirstDefaultChartOptions(chartsList) {
-  const chartOptions: Options = {
-    xAxis: {
-      events: {
-        afterSetExtremes: (e: any) => {
-          chartsList.forEach((chart: any, i) => {
-            if (chart && i !== 0) {
-              chart.ref.xAxis[0].setExtremes(e.min, e.max);
-            }
-          });
-        },
-      },
-    },
-    chart: {
-      spacingLeft: 20,
-      spacingRight: 20,
-    },
-    title: {
-      text: 'Chart №1',
-    },
-    series: [],
-  };
-
-  return chartOptions;
-}
-
-// For subsequent charts with hiding the date picker
 export function getDefaultChartOptions(chartNumber) {
   const chartOptions: Options = {
     rangeSelector: {
-      enabled: false,
+      inputEnabled: false,
     },
     chart: {
       spacingLeft: 20,
@@ -90,9 +62,6 @@ export const sensors = [
 export const maxChartsNumber = 4;
 export const minSensorsNumber = 5;
 export const maxSensorsNumber = 11;
-
-export const defaultChartType = 'line';
-export const defaultLineColor = '#7cb5ec';
 
 /*
  * For easier debugging in development mode, you can import the following file
