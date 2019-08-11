@@ -11,7 +11,7 @@ import { StockChart } from 'angular-highcharts';
 import * as R from 'ramda';
 import { untilDestroyed } from 'ngx-take-until-destroy';
 
-import { sensors } from '../../../environments/environment';
+import { chartsTypes, sensors } from '../../../environments/environment';
 import { getSensorsData } from '../../../utils';
 
 @Component({
@@ -21,10 +21,12 @@ import { getSensorsData } from '../../../utils';
 })
 export class OutputChartComponent implements OnInit, OnDestroy {
   sensorsByTypeList = sensors;
+  chartsTypes = chartsTypes;
 
   @Input() chartOptions: any;
 
   @Output() newChartEvent = new EventEmitter<any>();
+  @Output() newSeriesEvent = new EventEmitter<any>();
 
   stockChart: any;
   isApproximate: boolean;
@@ -45,17 +47,16 @@ export class OutputChartComponent implements OnInit, OnDestroy {
     console.log('<<<<<<< Generated data: ', this.sensorsByTypeList);
   }
 
-  onChangeChartProperty(sensorsTypeObj) {
+  onChangeChartProperty(sensorsType, property, value) {
     const sensorsByTypeNames = this.sensorsByTypeList
-      .find(({ type }) => type === sensorsTypeObj.type)
+      .find(({ type }) => type === sensorsType)
       .sensors.map(({ name }) => name);
 
     this.stockChart.ref$.subscribe(({ series }) => {
-      series.forEach((serie, i) => {
-        if (R.includes(serie.name, sensorsByTypeNames)) {
+      series.forEach(({ name }, i) => {
+        if (R.includes(name, sensorsByTypeNames) || name === sensorsType) {
           series[i].update({
-            type: sensorsTypeObj.chartType,
-            color: sensorsTypeObj.lineColor,
+            [property]: value,
           });
         }
       });
@@ -70,9 +71,12 @@ export class OutputChartComponent implements OnInit, OnDestroy {
       );
 
       if (!isExistSensor) {
-        const newSerie = { ...sensor, type: chartType };
+        const newSeries = { ...sensor, type: chartType };
 
-        chart.addSeries(newSerie, true);
+        // For calculate date range
+        this.newSeriesEvent.emit(newSeries);
+
+        chart.addSeries(newSeries, true);
       }
     });
   }
@@ -83,7 +87,11 @@ export class OutputChartComponent implements OnInit, OnDestroy {
     });
   }
 
-  onAllSensorsRemovedByType(sensorsType, approximateChartName?) {
+  onAllSensorsRemovedByType(sensorsType, isCleared?) {
+    if (isCleared) {
+      this.changeSensorsByTypeToDefault(sensorsType);
+    }
+
     const sensorsByTypeNames = this.sensorsByTypeList
       .find(({ type }) => type === sensorsType)
       .sensors.map(({ name }) => name);
@@ -92,10 +100,23 @@ export class OutputChartComponent implements OnInit, OnDestroy {
       series
         .filter(
           ({ name }) =>
-            sensorsByTypeNames.includes(name) || name === approximateChartName,
+            sensorsByTypeNames.includes(name) || name === sensorsType,
         )
         .map(index => index.remove());
     });
+  }
+
+  changeSensorsByTypeToDefault(sensorsType) {
+    this.sensorsByTypeList = this.sensorsByTypeList.map(sensorsByTypeObj =>
+      sensorsByTypeObj.type === sensorsType
+        ? {
+            ...sensorsByTypeObj,
+            isApproximate: false,
+            chartType: 'line',
+            lineColor: '#7cb5ec',
+          }
+        : sensorsByTypeObj,
+    );
   }
 
   switchApproximate(sensorsTypeObj) {
@@ -115,15 +136,17 @@ export class OutputChartComponent implements OnInit, OnDestroy {
         .sort((a, b) => a[0] - b[0]);
 
       this.stockChart.ref$.pipe(untilDestroyed(this)).subscribe(res => {
-        const newSerie = {
+        const newSeries = {
           name: sensorsTypeObj.type,
           data: approximatedSensors,
+          type: sensorsTypeObj.chartType,
+          color: sensorsTypeObj.lineColor,
         };
 
-        res.addSeries(newSerie, true);
+        res.addSeries(newSeries, true);
       });
     } else {
-      this.onAllSensorsRemovedByType(sensorsTypeObj.type, sensorsTypeObj.type);
+      this.onAllSensorsRemovedByType(sensorsTypeObj.type);
 
       selectedSensorsByType.forEach(sensor =>
         this.onSensorSelected(sensor, sensorsTypeObj.chartType),

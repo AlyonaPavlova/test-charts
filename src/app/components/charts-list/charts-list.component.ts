@@ -12,22 +12,21 @@ import { formatDateToTimestamp } from '../../../utils';
 export class ChartsListComponent implements OnInit {
   charts = [];
   options = [];
+  series = [];
 
   toDate: any;
   fromDate: any;
 
+  maxDate: any;
+  minDate: any;
+
+  // Max and Min for chart xAxis
   maxTimestamp: number;
   minTimestamp: number;
 
   constructor(private clickHandlerService: ClickHandlerService) {}
 
   ngOnInit() {
-    this.toDate = new Date();
-    this.fromDate = new Date(2010, 1, 1);
-
-    this.maxTimestamp = formatDateToTimestamp(this.toDate);
-    this.minTimestamp = formatDateToTimestamp(this.fromDate);
-
     // Default empty chart
     this.addChart();
   }
@@ -36,13 +35,15 @@ export class ChartsListComponent implements OnInit {
     this.charts = [...this.charts, chart];
   }
 
-  // Adding chart options for display new chart
   addChart() {
+    // Adding chart options for display new chart
     const newChartOptions = getDefaultChartOptions(this.options.length + 1);
-
     this.options = [...this.options, newChartOptions];
 
+    // For Add Chart button from nav component
     this.clickHandlerService.emitClickEvent('add', this.options.length);
+
+    this.updateChartsXAxis(); // Apply the selected date to a new chart
   }
 
   removeChart(chartOptions) {
@@ -53,9 +54,10 @@ export class ChartsListComponent implements OnInit {
       ({ options }) => options.title.text !== chartOptions.title.text,
     );
 
-    // if (chartOptions.title.text === 'Chart №1') {}
-
+    // For Add Chart button from nav component
     this.clickHandlerService.emitClickEvent('remove', this.options.length);
+
+    this.updateChartsTitles();
   }
 
   onToDateChange(date) {
@@ -76,5 +78,29 @@ export class ChartsListComponent implements OnInit {
         chart.ref.xAxis[0].setExtremes(this.minTimestamp, this.maxTimestamp);
       }
     });
+  }
+
+  updateChartsTitles() {
+    this.charts.forEach((chart, i) => {
+      if (chart) {
+        chart.ref.update({
+          title: {
+            text: `Chart №${i + 1}`,
+          },
+        });
+      }
+    });
+  }
+
+  calcDateRange(series) {
+    this.series = [...this.series, series];
+
+    const allSeriesData = this.series
+      .map(({ data }) => data.map(item => item[0]))
+      .flat(4)
+      .sort((a, b) => a[0] - b[0]);
+
+    this.minDate = new Date(allSeriesData[0] * 1000);
+    this.maxDate = new Date(allSeriesData[allSeriesData.length - 1] * 1000);
   }
 }

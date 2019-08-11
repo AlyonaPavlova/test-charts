@@ -14,8 +14,11 @@ export function getDefaultChartOptions(chartNumber) {
       inputEnabled: false,
     },
     chart: {
-      spacingLeft: 20,
-      spacingRight: 20,
+      spacingLeft: 30,
+      spacingRight: 40,
+    },
+    navigator: {
+      enabled: true,
     },
     title: {
       text: `Chart №${chartNumber}`,
@@ -62,6 +65,8 @@ export const sensors = [
 export const maxChartsNumber = 4;
 export const minSensorsNumber = 5;
 export const maxSensorsNumber = 11;
+
+export const chartsTypes = ['line', 'bar'];
 
 /*
  * For easier debugging in development mode, you can import the following file

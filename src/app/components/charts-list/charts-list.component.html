@@ -1,21 +1,21 @@
-<div class="btn-group mt-5 mb-5">
-  <label class="my-1 pr-3" for="date-from">From</label>
+<div class="btn-group mt-1 mb-1 date-picker">
+  <label class="my-1 pr-3 date-label" for="date-from">From</label>
   <input
     [ngModel]="fromDate | date: 'yyyy-MM-dd'"
     (ngModelChange)="onFromDateChange($event)"
-    min="{{ fromDate | date: 'yyyy-MM-dd' }}"
-    max="{{ toDate | date: 'yyyy-MM-dd' }}"
+    min="{{ minDate | date: 'yyyy-MM-dd' }}"
+    max="{{ maxDate | date: 'yyyy-MM-dd' }}"
     id="date-from"
     class="form-control"
     type="date"
   />
 
-  <label class="my-1 pr-3 ml-3" for="date-to">To</label>
+  <label class="my-1 pr-3 ml-3 date-label" for="date-to">To</label>
   <input
     [ngModel]="toDate | date: 'yyyy-MM-dd'"
     (ngModelChange)="onToDateChange($event)"
-    min="{{ fromDate | date: 'yyyy-MM-dd' }}"
-    max="{{ toDate | date: 'yyyy-MM-dd' }}"
+    min="{{ minDate | date: 'yyyy-MM-dd' }}"
+    max="{{ maxDate | date: 'yyyy-MM-dd' }}"
     id="date-to"
     class="form-control"
     type="date"
@@ -35,5 +35,6 @@
   <app-output-chart
     [chartOptions]="chartOptions"
     (newChartEvent)="changeChartsList($event)"
+    (newSeriesEvent)="calcDateRange($event)"
   ></app-output-chart>
 </div>
