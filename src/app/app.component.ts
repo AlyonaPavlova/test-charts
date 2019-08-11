@@ -14,6 +14,4 @@ export class AppComponent {
   addChart() {
     this.chartsListComponent.addChart();
   }
-
-  removeChart() {}
 }

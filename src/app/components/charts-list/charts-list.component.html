@@ -1,5 +1,6 @@
 <div class="btn-group mt-1 mb-1 date-picker">
   <label class="my-1 pr-3 date-label" for="date-from">From</label>
+
   <input
     [ngModel]="fromDate | date: 'yyyy-MM-dd'"
     (ngModelChange)="onFromDateChange($event)"
@@ -11,6 +12,7 @@
   />
 
   <label class="my-1 pr-3 ml-3 date-label" for="date-to">To</label>
+
   <input
     [ngModel]="toDate | date: 'yyyy-MM-dd'"
     (ngModelChange)="onToDateChange($event)"

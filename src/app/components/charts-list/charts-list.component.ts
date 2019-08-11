@@ -17,6 +17,7 @@ export class ChartsListComponent implements OnInit {
   toDate: any;
   fromDate: any;
 
+  // Date range
   maxDate: any;
   minDate: any;
 

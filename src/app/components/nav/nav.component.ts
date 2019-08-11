@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 import { maxChartsNumber } from '../../../environments/environment';
-import {ClickHandlerService} from '../../services';
+import { ClickHandlerService } from '../../services';
 
 @Component({
   selector: 'app-nav',

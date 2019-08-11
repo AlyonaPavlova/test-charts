@@ -48,7 +48,9 @@
       <button
         (click)="onClickAddChart()"
         [disabled]="chartsNumber >= maxChartsNumber"
-        [style.cursor]="chartsNumber >= maxChartsNumber ? 'not-allowed' : 'pointer'"
+        [style.cursor]="
+          chartsNumber >= maxChartsNumber ? 'not-allowed' : 'pointer'
+        "
         class="btn btn-outline-success my-2 my-sm-0"
       >
         Add chart

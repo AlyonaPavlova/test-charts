@@ -15,10 +15,22 @@ export function getDefaultChartOptions(chartNumber) {
     },
     chart: {
       spacingLeft: 30,
-      spacingRight: 40,
+      spacingRight: 50,
     },
     navigator: {
       enabled: true,
+    },
+    yAxis: {
+      title: {
+        text: 'Values',
+      },
+    },
+    legend: {
+      enabled: true,
+      layout: 'vertical',
+      align: 'right',
+      verticalAlign: 'middle',
+      borderWidth: 0,
     },
     title: {
       text: `Chart №${chartNumber}`,
