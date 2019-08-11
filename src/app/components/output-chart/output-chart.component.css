@@ -1,0 +1,20 @@
+.sensor-title {
+  min-width: 160px;
+  display: block;
+}
+
+.ng-select.sensors-select {
+  width: 280px;
+}
+
+.ng-select.chart-type-select {
+  width: 100px;
+}
+
+.custom-chart {
+  width: 100%;
+}
+
+.approximate-button {
+  height: 36px;
+}
