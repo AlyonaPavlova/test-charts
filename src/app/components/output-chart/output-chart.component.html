@@ -3,7 +3,7 @@
 <div class="mt-3 mb-5 row">
   <div class="col-12 text-left pl-5">
     <div
-      *ngFor="let sensorsType of sensorsByTypeList; let i = index;"
+      *ngFor="let sensorsType of sensorsByTypeList; let i = index"
       class="form-inline mr-1 mb-2"
     >
       <label class="my-1 mr-2 sensor-title" for="{{ sensorsType.type }}">{{
@@ -17,14 +17,13 @@
         [multiple]="true"
         bindLabel="name"
         [(ngModel)]="sensorsType.selectedSensors"
-        (add)="onSensorSelected($event, sensorsType.chartType)"
+        (add)="onSensorSelected($event, sensorsType)"
         (remove)="onSensorRemoved($event, sensorsType)"
         (clear)="onAllSensorsRemovedByType(sensorsType.type, true)"
         placeholder="Nothing selected..."
       ></ng-select>
 
       <ng-container *ngIf="sensorsType.selectedSensors.length">
-
         <button
           [disabled]="sensorsType.selectedSensors.length === 1"
           [style.cursor]="
@@ -39,9 +38,11 @@
               [disabled]="sensorsType.selectedSensors.length === 1"
               type="checkbox"
               class="custom-control-input"
-              id="{{ 'custom-switch-' + i }}"
+              id="{{ 'custom-switch-' + i + '-' + stockChart.ref.index }}"
             />
-            <label class="custom-control-label" for="{{ 'custom-switch-' + i }}"
+            <label
+              class="custom-control-label"
+              for="{{ 'custom-switch-' + i + '-' + stockChart.ref.index }}"
               >Approximate</label
             >
           </div>
@@ -95,7 +96,6 @@
             ></ng-select>
           </div>
         </div>
-
       </ng-container>
     </div>
   </div>

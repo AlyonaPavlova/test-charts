@@ -37,6 +37,7 @@ export class OutputChartComponent implements OnInit, OnDestroy {
     this.stockChart = new StockChart(this.chartOptions);
     this.newChartEvent.emit(this.stockChart);
 
+    // Generate random data
     this.sensorsByTypeList = this.sensorsByTypeList.map(sensorsTypeObj => {
       return {
         ...sensorsTypeObj,
@@ -63,20 +64,27 @@ export class OutputChartComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSensorSelected(sensor, chartType) {
+  onSensorSelected(sensor, sensorsByTypeObj) {
+    const { chartType, lineColor, isApproximate } = sensorsByTypeObj;
+
     this.stockChart.ref$.pipe(untilDestroyed(this)).subscribe(chart => {
       const isExistSensor = R.includes(
         sensor.name,
         chart.series.map(({ name }) => name),
       );
 
-      if (!isExistSensor) {
-        const newSeries = { ...sensor, type: chartType };
+      if (isApproximate) {
+        // Approximate with new series arr
+        this.switchApproximate(sensorsByTypeObj);
+      } else {
+        if (!isExistSensor) {
+          const newSeries = { ...sensor, type: chartType, color: lineColor };
 
-        // For calculate date range
-        this.newSeriesEvent.emit(newSeries);
+          // For calculate date range
+          this.newSeriesEvent.emit(newSeries);
 
-        chart.addSeries(newSeries, true);
+          chart.addSeries(newSeries, true);
+        }
       }
     });
   }
@@ -84,7 +92,6 @@ export class OutputChartComponent implements OnInit, OnDestroy {
   onSensorRemoved(sensor, sensorsByTypeObj) {
     this.stockChart.ref$.pipe(untilDestroyed(this)).subscribe(({ series }) => {
       if (sensorsByTypeObj.isApproximate) {
-
         // Remove approximate series
         series.find(({ name }) => sensorsByTypeObj.type === name).remove();
 
@@ -94,7 +101,7 @@ export class OutputChartComponent implements OnInit, OnDestroy {
           // Display series without approximation
           this.onSensorSelected(
             sensorsByTypeObj.selectedSensors[0],
-            sensorsByTypeObj.chartType,
+            sensorsByTypeObj,
           );
         } else {
           // Approximate with new series arr
@@ -138,16 +145,16 @@ export class OutputChartComponent implements OnInit, OnDestroy {
     );
   }
 
-  switchApproximate(sensorsTypeObj) {
+  switchApproximate(sensorsByTypeObj) {
     const sensorsObjByType = this.sensorsByTypeList.find(
-      ({ type }) => type === sensorsTypeObj.type,
+      ({ type }) => type === sensorsByTypeObj.type,
     );
 
     const sensorsByType = sensorsObjByType.sensors;
     const selectedSensorsByType = sensorsObjByType.selectedSensors;
 
-    if (sensorsTypeObj.isApproximate) {
-      this.onAllSensorsRemovedByType(sensorsTypeObj.type);
+    if (sensorsByTypeObj.isApproximate) {
+      this.onAllSensorsRemovedByType(sensorsByTypeObj.type);
 
       const approximatedSensors = sensorsByType
         .map(({ data }) => data)
@@ -156,19 +163,19 @@ export class OutputChartComponent implements OnInit, OnDestroy {
 
       this.stockChart.ref$.pipe(untilDestroyed(this)).subscribe(res => {
         const newSeries = {
-          name: sensorsTypeObj.type,
+          name: sensorsByTypeObj.type,
           data: approximatedSensors,
-          type: sensorsTypeObj.chartType,
-          color: sensorsTypeObj.lineColor,
+          type: sensorsByTypeObj.chartType,
+          color: sensorsByTypeObj.lineColor,
         };
 
         res.addSeries(newSeries, true);
       });
     } else {
-      this.onAllSensorsRemovedByType(sensorsTypeObj.type);
+      this.onAllSensorsRemovedByType(sensorsByTypeObj.type);
 
       selectedSensorsByType.forEach(sensor =>
-        this.onSensorSelected(sensor, sensorsTypeObj.chartType),
+        this.onSensorSelected(sensor, sensorsByTypeObj),
       );
     }
   }
