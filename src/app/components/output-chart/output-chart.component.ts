@@ -81,9 +81,28 @@ export class OutputChartComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSensorRemoved(sensor) {
+  onSensorRemoved(sensor, sensorsByTypeObj) {
     this.stockChart.ref$.pipe(untilDestroyed(this)).subscribe(({ series }) => {
-      series.find(({ name }) => sensor.label === name).remove();
+      if (sensorsByTypeObj.isApproximate) {
+
+        // Remove approximate series
+        series.find(({ name }) => sensorsByTypeObj.type === name).remove();
+
+        if (sensorsByTypeObj.selectedSensors.length === 1) {
+          sensorsByTypeObj.isApproximate = false;
+
+          // Display series without approximation
+          this.onSensorSelected(
+            sensorsByTypeObj.selectedSensors[0],
+            sensorsByTypeObj.chartType,
+          );
+        } else {
+          // Approximate with new series arr
+          this.switchApproximate(sensorsByTypeObj);
+        }
+      } else {
+        series.find(({ name }) => sensor.label === name).remove();
+      }
     });
   }
 
