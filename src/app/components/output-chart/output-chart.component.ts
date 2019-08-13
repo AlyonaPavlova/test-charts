@@ -16,7 +16,6 @@ import {
   sensors,
   serverUrl,
 } from '../../../environments/environment';
-import { getSensorsData } from '../../../utils';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -42,32 +41,24 @@ export class OutputChartComponent implements OnInit, OnDestroy {
     this.stockChart = new StockChart(this.chartOptions);
     this.newChartEvent.emit(this.stockChart);
 
-    // Generate random data
-    this.sensorsByTypeList = this.sensorsByTypeList.map(sensorsTypeObj => {
-      return {
-        ...sensorsTypeObj,
-        sensors: getSensorsData(sensorsTypeObj.type),
-      };
-    });
-
+    // Get sensors data from server
     this.httpClient.get(`${serverUrl}/sensorsData`).subscribe((res: any) => {
-      console.log(res);
-
       this.sensorsByTypeList = this.sensorsByTypeList.map(sensorsTypeObj => {
         return {
           ...sensorsTypeObj,
           sensors: res
             .filter(({ type }) => type === sensorsTypeObj.type)
             .map(({ name, data }) => {
-              return { name, data };
+              return {
+                name,
+                data: data.map(({ date, value }) => [date, value]),
+              };
             }),
         };
       });
 
-      console.log(this.sensorsByTypeList);
+      console.log('<<<<<<< Sensors by type data: ', this.sensorsByTypeList);
     });
-
-    console.log('<<<<<<< Generated data: ', this.sensorsByTypeList);
   }
 
   onChangeChartProperty(sensorsType, property, value) {
