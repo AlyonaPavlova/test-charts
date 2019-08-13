@@ -11,8 +11,13 @@ import { StockChart } from 'angular-highcharts';
 import * as R from 'ramda';
 import { untilDestroyed } from 'ngx-take-until-destroy';
 
-import { chartsTypes, sensors } from '../../../environments/environment';
+import {
+  chartsTypes,
+  sensors,
+  serverUrl,
+} from '../../../environments/environment';
 import { getSensorsData } from '../../../utils';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-output-chart',
@@ -31,7 +36,7 @@ export class OutputChartComponent implements OnInit, OnDestroy {
   stockChart: any;
   isApproximate: boolean;
 
-  constructor() {}
+  constructor(private httpClient: HttpClient) {}
 
   ngOnInit() {
     this.stockChart = new StockChart(this.chartOptions);
@@ -43,6 +48,23 @@ export class OutputChartComponent implements OnInit, OnDestroy {
         ...sensorsTypeObj,
         sensors: getSensorsData(sensorsTypeObj.type),
       };
+    });
+
+    this.httpClient.get(`${serverUrl}/sensorsData`).subscribe((res: any) => {
+      console.log(res);
+
+      this.sensorsByTypeList = this.sensorsByTypeList.map(sensorsTypeObj => {
+        return {
+          ...sensorsTypeObj,
+          sensors: res
+            .filter(({ type }) => type === sensorsTypeObj.type)
+            .map(({ name, data }) => {
+              return { name, data };
+            }),
+        };
+      });
+
+      console.log(this.sensorsByTypeList);
     });
 
     console.log('<<<<<<< Generated data: ', this.sensorsByTypeList);
