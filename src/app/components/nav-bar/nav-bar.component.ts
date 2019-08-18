@@ -1,20 +1,27 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
+import { NgxSmartModalService } from 'ngx-smart-modal';
+
 import { maxChartsNumber } from '../../../environments/environment';
 import { ClickHandlerService } from '../../services';
 
 @Component({
   selector: 'app-nav',
-  templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.css'],
+  templateUrl: './nav-bar.component.html',
+  styleUrls: ['./nav-bar.component.css'],
 })
-export class NavComponent implements OnInit {
+export class NavBarComponent implements OnInit {
   @Output() addChartClickEvent = new EventEmitter<any>();
 
   chartsNumber: number;
   maxChartsNumber = maxChartsNumber;
 
-  constructor(private clickHandlerService: ClickHandlerService) {}
+  isLogged = false;
+
+  constructor(
+    private clickHandlerService: ClickHandlerService,
+    public ngxSmartModalService: NgxSmartModalService,
+  ) {}
 
   ngOnInit() {
     this.clickHandlerService.actions.subscribe(res => {
@@ -26,5 +33,9 @@ export class NavComponent implements OnInit {
 
   onClickAddChart() {
     this.addChartClickEvent.emit();
+  }
+
+  onLoggedIn() {
+    this.isLogged = true;
   }
 }

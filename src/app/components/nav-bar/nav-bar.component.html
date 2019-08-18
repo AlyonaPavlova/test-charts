@@ -1,0 +1,76 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+  <a class="navbar-brand" href="#">Dashboard</a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li *ngIf="isLogged" class="nav-item">
+        <button
+          (click)="addChartModal.open()"
+          [disabled]="chartsNumber >= maxChartsNumber"
+          [style.cursor]="
+            chartsNumber >= maxChartsNumber ? 'not-allowed' : 'pointer'
+          "
+          class="btn btn-outline-success my-2 my-sm-0"
+        >
+          Add chart
+        </button>
+
+        <ngx-smart-modal
+          #addChartModal
+          identifier="addChartModal"
+          customClass="add-charts__modal"
+        >
+          <app-add-chart-modal></app-add-chart-modal>
+        </ngx-smart-modal>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+
+      <div class="mr-2">
+        <button
+          (click)="signUpModal.open()"
+          class="btn btn-primary my-2 my-sm-0"
+        >
+          Sign up
+        </button>
+
+        <ngx-smart-modal
+          #signUpModal
+          identifier="signUpModal"
+          customClass="sign-up__modal"
+        >
+          <app-sign-up-modal></app-sign-up-modal>
+        </ngx-smart-modal>
+      </div>
+
+      <div>
+        <button
+          (click)="loginModal.open()"
+          class="btn btn-primary my-2 my-sm-0"
+        >
+          Login
+        </button>
+
+        <ngx-smart-modal
+          #loginModal
+          identifier="loginModal"
+          customClass="login__modal"
+        >
+          <app-login-modal (loggedEvent)="onLoggedIn()"></app-login-modal>
+        </ngx-smart-modal>
+      </div>
+
+    </form>
+  </div>
+</nav>

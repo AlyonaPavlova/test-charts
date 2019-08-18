@@ -10,8 +10,4 @@ import { ChartsListComponent } from './components/charts-list/charts-list.compon
 export class AppComponent {
   @ViewChild(ChartsListComponent, { static: false })
   chartsListComponent: ChartsListComponent;
-
-  addChart() {
-    this.chartsListComponent.addChart();
-  }
 }

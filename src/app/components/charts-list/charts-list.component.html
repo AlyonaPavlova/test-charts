@@ -1,42 +1,47 @@
-<div class="btn-group mt-1 mb-1 date-picker">
-  <label class="my-1 pr-3 date-label" for="date-from">From</label>
+<div class="container-fluid">
+  <div *ngIf="options.length" class="row mb-4 mt-3">
+    <div class="col-7 date-picker__container">
+      <app-date-picker (dateSelectionEvent)="onDateChange($event)" class="float-left"></app-date-picker>
+    </div>
+  </div>
+  <div class="row d-flex justify-content-center align-items-center charts-list">
+    <ng-container *ngFor="let chartOptions of options">
+      <div
+        class="col-6 row d-flex justify-content-center align-items-center p-4 mt-2 mb-2"
+      >
+        <div class="col-11 chart">
+          <button
+            (click)="removeChart(chartOptions)"
+            type="button"
+            class="close pr-4 mt-4"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
 
-  <input
-    [ngModel]="fromDate | date: 'yyyy-MM-dd'"
-    (ngModelChange)="onFromDateChange($event)"
-    min="{{ minDate | date: 'yyyy-MM-dd' }}"
-    max="{{ maxDate | date: 'yyyy-MM-dd' }}"
-    id="date-from"
-    class="form-control"
-    type="date"
-  />
+          <button
+            (click)="editChartModal.open()"
+            type="button"
+            class="pr-4 mt-4 ml-2 edit-button"
+            aria-label="Edit"
+          >
+            <i class="far fa-edit"></i>
+          </button>
 
-  <label class="my-1 pr-3 ml-3 date-label" for="date-to">To</label>
+          <ngx-smart-modal #editChartModal identifier="editChartModal">
+            <app-add-chart-modal
+              [isEditModal]="true"
+              [currentChartName]="chartOptions.title.text"
+              [chartOptions]="chartOptions"
+            ></app-add-chart-modal>
+          </ngx-smart-modal>
 
-  <input
-    [ngModel]="toDate | date: 'yyyy-MM-dd'"
-    (ngModelChange)="onToDateChange($event)"
-    min="{{ minDate | date: 'yyyy-MM-dd' }}"
-    max="{{ maxDate | date: 'yyyy-MM-dd' }}"
-    id="date-to"
-    class="form-control"
-    type="date"
-  />
-</div>
-
-<div *ngFor="let chartOptions of options">
-  <button
-    (click)="removeChart(chartOptions)"
-    type="button"
-    class="close pr-4 mt-4"
-    aria-label="Close"
-  >
-    <span aria-hidden="true">&times;</span>
-  </button>
-
-  <app-output-chart
-    [chartOptions]="chartOptions"
-    (newChartEvent)="changeChartsList($event)"
-    (newSeriesEvent)="calcDateRange($event)"
-  ></app-output-chart>
+          <app-output-chart
+            [chartOptions]="chartOptions"
+            (newChartEvent)="changeChartsList($event)"
+          ></app-output-chart>
+        </div>
+      </div>
+    </ng-container>
+  </div>
 </div>

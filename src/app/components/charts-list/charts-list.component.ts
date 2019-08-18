@@ -14,12 +14,9 @@ export class ChartsListComponent implements OnInit {
   options = [];
   series = [];
 
-  toDate: any;
-  fromDate: any;
-
   // Date range
-  maxDate: any;
-  minDate: any;
+  maxDate: Date;
+  minDate: Date;
 
   // Max and Min for chart xAxis
   maxTimestamp: number;
@@ -28,20 +25,32 @@ export class ChartsListComponent implements OnInit {
   constructor(private clickHandlerService: ClickHandlerService) {}
 
   ngOnInit() {
-    // Default empty chart
-    this.addChart();
+    this.clickHandlerService.actions.subscribe(res => {
+      if (res) {
+        if (res.action === 'addChart') {
+          this.addChart(res.payload.chartName, res.payload.sensors);
+        }
+        if (res.action === 'editChart') {
+          this.updateChart(
+            res.payload.chartName,
+            res.payload.newChartName,
+            res.payload.sensors,
+          );
+        }
+      }
+    });
   }
 
   changeChartsList(chart) {
     this.charts = [...this.charts, chart];
   }
 
-  addChart() {
+  addChart(chartName, sensors) {
     // Adding chart options for display new chart
-    const newChartOptions = getDefaultChartOptions(this.options.length + 1);
+    const newChartOptions = getDefaultChartOptions(chartName, sensors);
     this.options = [...this.options, newChartOptions];
 
-    // For Add Chart button from nav component
+    // For Add Chart button from nav-bar component
     this.clickHandlerService.emitClickEvent('add', this.options.length);
 
     this.updateChartsXAxis(); // Apply the selected date to a new chart
@@ -55,22 +64,22 @@ export class ChartsListComponent implements OnInit {
       ({ options }) => options.title.text !== chartOptions.title.text,
     );
 
-    // For Add Chart button from nav component
+    // For Add Chart button from nav-bar component
     this.clickHandlerService.emitClickEvent('remove', this.options.length);
-
-    this.updateChartsTitles();
   }
 
-  onToDateChange(date) {
-    this.maxTimestamp = formatDateToTimestamp(new Date(date));
-
-    this.updateChartsXAxis();
-  }
-
-  onFromDateChange(date) {
-    this.minTimestamp = formatDateToTimestamp(new Date(date));
-
-    this.updateChartsXAxis();
+  updateChart(chartName, newChartName, sensors) {
+    this.charts.forEach(chart => {
+      if (chart.options.title.text === chartName) {
+        sensors.forEach(sensor => {
+          if (
+            !chart.options.series.map(({ name }) => name).includes(sensor.name)
+          ) {
+            chart.ref.addSeries(sensor);
+          }
+        });
+      }
+    });
   }
 
   updateChartsXAxis() {
@@ -81,16 +90,16 @@ export class ChartsListComponent implements OnInit {
     });
   }
 
-  updateChartsTitles() {
-    this.charts.forEach((chart, i) => {
-      if (chart) {
-        chart.ref.update({
-          title: {
-            text: `Chart №${i + 1}`,
-          },
-        });
-      }
-    });
+  // For date picker
+  onDateChange(event) {
+    const { fromDate, toDate } = event;
+
+    this.minTimestamp = fromDate
+      ? formatDateToTimestamp(new Date(fromDate))
+      : null;
+    this.maxTimestamp = toDate ? formatDateToTimestamp(new Date(toDate)) : null;
+
+    this.updateChartsXAxis();
   }
 
   calcDateRange(series) {

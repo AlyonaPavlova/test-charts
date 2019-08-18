@@ -1,0 +1,41 @@
+<div class="date-picker-wrapper">
+  <form class="form-inline">
+    <div class="form-group">
+      <div class="input-group">
+        <input
+          class="form-control"
+          placeholder="yyyy-mm-dd — yyyy-mm-dd"
+          name="dp"
+          ngModel
+          ngbDatepicker
+          #datePicker="ngbDatepicker"
+          (ngModelChange)="onDateSelection($event)"
+          [dayTemplate]="datePickerTemplate"
+          [displayMonths]="2"
+          outsideDays="hidden"
+        />
+
+        <div class="input-group-addon">
+          <button
+            class="btn btn-outline-secondary calendar custom-calendar fa fa-calendar"
+            (click)="datePicker.open()"
+            type="button"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <ng-template #datePickerTemplate let-date="date" let-focused="focused">
+    <span
+      class="custom-day"
+      [class.focused]="focused"
+      [class.range]="isRange(date)"
+      [class.faded]="isHovered(date) || isInside(date)"
+      (mouseenter)="hoveredDate = date"
+      (mouseleave)="hoveredDate = null"
+    >
+      {{ date.day }}
+    </span>
+  </ng-template>
+</div>

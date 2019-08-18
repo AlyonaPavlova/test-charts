@@ -1,8 +1,15 @@
-.date-label {
-  line-height: 30px;
+.date-picker__container {
+  margin-left: 50px;
 }
 
-.date-picker {
+.chart {
+  border: 1px #dfe5ea solid;
+  background-color: #f8f9fa;
+}
+
+.edit-button {
+  background-color: #f8f9fa;
+  color: #7c7c7d;
+  border: 0;
   float: left;
-  margin-left: 20px;
 }

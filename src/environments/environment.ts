@@ -8,14 +8,21 @@ export const environment = {
   production: false,
 };
 
-export function getDefaultChartOptions(chartNumber) {
+export function getDefaultChartOptions(chartName, sensorsList) {
   const chartOptions: Options = {
     rangeSelector: {
       inputEnabled: false,
     },
     chart: {
-      spacingLeft: 30,
-      spacingRight: 50,
+      spacingBottom: 15,
+      spacingTop: 10,
+      spacingLeft: 10,
+      spacingRight: 10,
+
+      width: 700,
+      height: 400,
+
+      backgroundColor: '#f8f9fa',
     },
     navigator: {
       enabled: true,
@@ -25,17 +32,14 @@ export function getDefaultChartOptions(chartNumber) {
         text: 'Values',
       },
     },
-    legend: {
-      enabled: true,
-      layout: 'vertical',
-      align: 'right',
-      verticalAlign: 'middle',
-      borderWidth: 0,
-    },
     title: {
-      text: `Chart №${chartNumber}`,
+      text: chartName,
+      align: 'left',
+      x: 210,
+      margin: 20,
+      style: { fontWeight: 'bold', fontSize: '18px' },
     },
-    series: [],
+    series: sensorsList || [],
   };
 
   return chartOptions;
@@ -78,7 +82,7 @@ export const maxChartsNumber = 4;
 export const minSensorsNumber = 5;
 export const maxSensorsNumber = 11;
 
-export const chartsTypes = ['line', 'bar'];
+export const chartTypes = ['line', 'bar'];
 
 export const serverUrl = 'http://localhost:5000';
 
